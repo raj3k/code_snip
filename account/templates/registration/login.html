@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Log-in{% endblock %}
+{% block content %}
+  <h1>Log-in</h1>
+  {{ form.non_field_errors }}
+  <p>Please, use the following form to log-in:</p>
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="field">
+        <p class="control">
+          {{ field.errors }}
+          {{ field.label_tag }} {{ field }}
+          {% if field.help_text %}
+          <p class="help">{{ field.help_text|safe }}</p>
+          {% endif %}
+        </p>
+      </div>
+    {% endfor %}
+    <div class="field">
+      <p class="control">
+        <input type="submit" value="Log in" class="button is-success">
+      </p>
+    </div>
+  </form>
+
+{% endblock %}
