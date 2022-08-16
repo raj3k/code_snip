@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 {% block title %}Log-in{% endblock %}
 {% block content %}
 <h2>Log-in</h2>
@@ -21,7 +22,7 @@
           {{ field.label_tag }}
           <p class="control">
             {{ field.errors }}
-            {{ field }}
+            {{ field|add_class:'input' }}
             {% if field.help_text %}
             <p class="help">{{ field.help_text|safe }}</p>
             {% endif %}
