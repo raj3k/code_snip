@@ -6,8 +6,8 @@
   {% if form.errors %}
   <article class="message is-danger">
     <div class="message-body">
-      Your username and password didn't match.
-      Please try again.
+        Your username and password didn't match.
+        Please try again.
     </div>
   </article>
   {% else %}
@@ -23,9 +23,6 @@
           <p class="control">
             {{ field.errors }}
             {{ field|add_class:'input' }}
-            {% if field.help_text %}
-            <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
           </p>
         </div>
         {% endfor %}
