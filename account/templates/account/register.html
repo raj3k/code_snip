@@ -14,7 +14,11 @@
                 {{ field.label_tag }}
                     <p class="control">
                     {% for error in field.errors %}
-                        {{ error }}
+                        <article class="message is-danger">
+                            <div class="message-body">
+                                {{ error }}
+                            </div>
+                        </article>
                     {% endfor %}
                     {{ field|add_class:'input' }}
                     </p>

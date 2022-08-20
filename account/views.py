@@ -19,6 +19,8 @@ def register(request):
             return render(request,
                           'account/register_done.html',
                           {'new_user': new_user})
+        else:
+            messages.error(request, 'Error with creating your account', extra_tags='danger')
     else:
         user_form = UserRegistrationForm()
     return render(request, 'account/register.html', {'user_form': user_form})
