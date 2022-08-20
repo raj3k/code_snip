@@ -45,6 +45,15 @@
   </nav>
   <section class="section">
     <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+          <article class="message is-{{ message.tags }}">
+            <div class="message-body">
+              {{ message|safe }}
+            </div>
+          </article>
+        {% endfor %}
+      {% endif %}
       {% block content %}
       {% endblock %}
     </div>
