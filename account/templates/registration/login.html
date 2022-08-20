@@ -43,4 +43,24 @@
     Forgotten your password?
     </a>
 </p>
+<hr>
+<p>Sign in with:</p>
+<a href="{% url 'social:begin' 'github' %}" class="button is-outlined">
+    <span class="icon">
+        <i class="fab fa-github"></i>
+    </span>
+    <span>
+        GitHub
+    </span>
+</a>
+
+<a href="{% url 'social:begin' 'github' %}" class="button is-danger is-outlined">
+    <span class="icon">
+        <i class="fa-brands fa-google"></i>
+    </span>
+    <span>
+        Google
+    </span>
+</a>
+
 {% endblock %}
