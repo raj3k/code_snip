@@ -35,6 +35,11 @@ class Snippet(models.Model):
         max_length=100
     )
     created = models.DateTimeField(auto_now_add=True)
+    users_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='snippets_liked',
+        blank=True
+    )
 
     class Meta:
         indexes = [
