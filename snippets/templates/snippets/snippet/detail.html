@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load pygmentize %}
+{%block pygments_css %}<style>{% pygments_css %}</style>{% endblock %}
+{% block title %}{{ snippet.title }}{% endblock %}
+{% block content %}
+    {% with total_likes=snippet.users_like.count %}
+    <nav class="level">
+        <div class="level-left">
+            <p class="level-item has-text-centered title">
+                {{ snippet.title }}
+            </p>
+        </div>
+        <div class="level-right">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Like{{ total_likes|pluralize }}</p>
+                    <p class="title">{{ total_likes }}</p>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+    <div class="container">
+       <div class="sourcecode">
+           {{ snippet.code|pygmentize:snippet_config }}  <!-- highlighting -->
+       </div>
+   </div>
+    {% endwith %}
+{% endblock %}
