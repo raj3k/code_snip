@@ -4,6 +4,8 @@
 <head>
   <title>{% block title %}{% endblock %}</title>
   <link href="{% static "css/bulma.min.css" %}" rel="stylesheet">
+  {% block pygments_css %}
+  {% endblock %}
 </head>
 <body>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
