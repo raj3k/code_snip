@@ -11,9 +11,11 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
 class Snippet(models.Model):
-    #     id UUID
+    #       id UUID
+    #   tags
+    #   private/public
     user = models.ForeignKey(
-        settings.USER_AUTH_MODEL,
+        settings.AUTH_USER_MODEL,
         related_name='snippets_created',
         on_delete=models.CASCADE
     )
