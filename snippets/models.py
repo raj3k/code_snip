@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 from django.utils.text import slugify
@@ -25,7 +26,7 @@ class Snippet(models.Model):
         blank=True
     )
     code = models.TextField()
-    linenos = models.BooleanField(default=False)
+    linenos = models.BooleanField(default=True)
     language = models.CharField(
         choices=LANGUAGE_CHOICES,
         default='python',
@@ -56,3 +57,6 @@ class Snippet(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('snippets:detail', args=[self.pk, self.slug])
