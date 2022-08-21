@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
+from django.utils.text import slugify
 
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
@@ -43,3 +44,8 @@ class Snippet(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
