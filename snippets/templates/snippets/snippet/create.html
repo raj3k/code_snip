@@ -1,10 +1,36 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 {% block title %}Create Snippet{% endblock %}
 {% block content %}
-  <h1>Create Snippet</h1>
-  <form method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <input type="submit" value="Create">
-  </form>
+	<h1 class="is-size-1">Create Snippet</h1>
+	<hr>
+	<form method="post" enctype="multipart/form-data">
+		<div class="columns">
+			<div class="column is-one-quarter">
+				<div class="field">
+					<label class="label">Title:</label>
+                    <div class="control">
+                        {{ form.title|add_class:'input' }}
+                    </div>
+					<label class="label">Code:</label>
+                    <div class="control">
+                        {{ form.code|add_class:'textarea' }}
+                    </div>
+					<label class="label">Line numbers:
+						{{ form.linenos|add_class:'checkbox' }}
+					</label>
+                    <label class="label">Language:</label>
+                    <div class="control select">
+                        {{ form.language|add_class:'select' }}
+                    </div>
+					<label class="label">Style:</label>
+                    <div class="control select">
+                        {{ form.style|add_class:'select' }}
+                    </div>
+				</div>
+			</div>
+		</div>
+		{% csrf_token %}
+		<input type="submit" value="Create" class="button">
+	</form>
 {% endblock %}
