@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from .forms import SnippetCreateForm
 from .models import Snippet
 
@@ -31,3 +33,19 @@ def snippet_detail(request, id, slug):
                                                             'snippet_config': snippet_config})
 
 
+@login_required
+@require_POST
+def snippet_like(request):
+    snippet_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if snippet_id and action:
+        try:
+            snippet = Snippet.objects.get(id=snippet_id)
+            if action == 'like':
+                snippet.users_like.add(request.user)
+            else:
+                snippet.users_like.remove(request.user)
+            return JsonResponse({'status': 'ok'})
+        except:
+            pass
+    return JsonResponse({'status': 'error'})
