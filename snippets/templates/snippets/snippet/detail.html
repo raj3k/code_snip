@@ -4,7 +4,7 @@
 {%block pygments_css %}<style>{% pygments_css %}</style>{% endblock %}
 {% block title %}{{ snippet.title }}{% endblock %}
 {% block content %}
-    {% with total_likes=snippet.users_like.count %}
+    {% with total_likes=snippet.users_like.count users_like=snippet.users_like.all %}
     <nav class="level">
         <div class="level-left">
             <p class="level-item has-text-centered title">
@@ -13,9 +13,19 @@
         </div>
         <div class="level-right">
             <div class="level-item has-text-centered">
+                <a href="#" data-id="{{ snippet.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="button is_normal" id="like">
+                {% if request.user not in users_like %}
+                    Like
+                {% else %}
+                    Unlike
+                {% endif %}
+                </a>
+            </div>
+            
+            <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">Like{{ total_likes|pluralize }}</p>
-                    <p class="title">{{ total_likes }}</p>
+                    <p id="count" class="title">{{ total_likes }}</p>
                 </div>
             </div>
         </div>
@@ -27,4 +37,46 @@
        </div>
    </div>
     {% endwith %}
+{% endblock %}
+
+{% block domready %}
+    let url = '{% url "snippets:like" %}';
+    const options = {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        mode: 'same-origin'
+    };
+    document.querySelector('a#like').addEventListener('click', function(e) {
+        e.preventDefault();
+        const likeButton = this;
+
+        // add request body
+        let formData = new FormData();
+        formData.append('id', likeButton.dataset.id);
+        formData.append('action', likeButton.dataset.action);
+        options['body'] = formData;
+
+        //send HTTP request
+        fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+            if (data['status'] === 'ok')
+            {
+                // toggle button text and data-action
+                let previousAction = likeButton.dataset.action;
+                let action = '';
+                if (previousAction === 'like') {
+                    action = 'unlike';
+                } else {
+                    action = 'like';
+                };
+                likeButton.dataset.action = action;
+                likeButton.innerHTML = action;
+                // update like count
+                let likeCount = document.querySelector('p#count');
+                let totalLikes = parseInt(likeCount.innerHTML);
+                likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1;
+            }
+        });
+    });
 {% endblock %}
