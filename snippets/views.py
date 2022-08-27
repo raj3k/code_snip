@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import SnippetCreateForm
 from .models import Snippet
 
@@ -49,3 +50,22 @@ def snippet_like(request):
         except:
             pass
     return JsonResponse({'status': 'error'})
+
+
+@login_required
+def snippet_list(request):
+    snippets = Snippet.objects.all()
+    paginator = Paginator(snippets, 8)
+    page = request.GET.get('page')
+    snippets_only = request.GET.get('snippets_only')
+    try:
+        snippets = paginator.page(page)
+    except PageNotAnInteger:
+        snippets = paginator.page(1)
+    except EmptyPage:
+        if snippets_only:
+            return HttpResponse('')
+        snippets = paginator.page(paginator.num_pages)
+    if snippets_only:
+        return render(request, 'snippets/snippet/list_snippets.html', {'section': 'images', 'snippets': snippets})
+    return render(request, 'snippets/snippet/list.html', {'section': 'snippets', 'snippets': snippets})
