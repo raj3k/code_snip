@@ -22,7 +22,7 @@
           Dashboard
         </a>
   
-        <a href="#" class="navbar-item {% if section == 'snippets' %}is-active{% endif %}">
+        <a href="{% url 'snippets:list' %}" class="navbar-item {% if section == 'snippets' %}is-active{% endif %}">
           Snippets
         </a>
       </div>
