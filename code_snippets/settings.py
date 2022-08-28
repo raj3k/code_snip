@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'social_django',
     'snippets.apps.SnippetsConfig',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,12 @@ WSGI_APPLICATION = 'code_snippets.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('NAME'),
+        'USER': env('USER'),
+        'PASSWORD': env('PASSWORD'),
+        'HOST': env('HOST'),
+        'PORT': env('PORT'),
     }
 }
 
