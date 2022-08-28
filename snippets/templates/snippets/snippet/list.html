@@ -4,7 +4,11 @@
 {% block pygments_css %}<style>{% pygments_css %}</style>{% endblock %}
 {% block title %}Snippets{% endblock %}
 {% block content %}
-    <h1>Snippets</h1>
+    <h1 class="is-size-1">Snippets</h1>
+    <hr>
+    {% if tag %}
+        <h2>Snippets tagged with <b>"{{ tag.name }}"</b></h2>
+    {% endif %}
     <div id="snippet-list">
         {% include "snippets/snippet/list_snippets.html" %}
     </div>

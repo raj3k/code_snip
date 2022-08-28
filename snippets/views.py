@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from taggit.models import Tag
 from .forms import SnippetCreateForm
 from .models import Snippet
 
@@ -13,11 +14,11 @@ def snippet_create(request):
     if request.method == 'POST':
         form = SnippetCreateForm(data=request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
             new_snippet = form.save(commit=False)
             #  assign current user to the item
             new_snippet.user = request.user
             new_snippet.save()
+            form.save_m2m()
             messages.success(request, 'Snippet added successfully')
             #  redirect to new created item detail view
             return redirect(new_snippet.get_absolute_url())
@@ -53,8 +54,12 @@ def snippet_like(request):
 
 
 @login_required
-def snippet_list(request):
+def snippet_list(request, tag_slug=None):
     snippets = Snippet.objects.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        snippets = snippets.filter(tags__in=[tag])
     paginator = Paginator(snippets, 8)
     page = request.GET.get('page')
     snippets_only = request.GET.get('snippets_only')
@@ -67,5 +72,5 @@ def snippet_list(request):
             return HttpResponse('')
         snippets = paginator.page(paginator.num_pages)
     if snippets_only:
-        return render(request, 'snippets/snippet/list_snippets.html', {'section': 'images', 'snippets': snippets})
-    return render(request, 'snippets/snippet/list.html', {'section': 'snippets', 'snippets': snippets})
+        return render(request, 'snippets/snippet/list_snippets.html', {'section': 'images', 'snippets': snippets, 'tag': tag})
+    return render(request, 'snippets/snippet/list.html', {'section': 'snippets', 'snippets': snippets, 'tag': tag})

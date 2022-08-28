@@ -29,12 +29,21 @@
                 </div>
             </div>
         </div>
-
     </nav>
     <div class="container">
        <div class="sourcecode">
            {{ snippet.code|pygmentize:snippet_config }}  <!-- highlighting -->
        </div>
+    </div>
+    <br>
+    <h2>Related with:</h2>
+    <div class="tags">
+        {% for tag in snippet.tags.all %}
+        <a href="{% url "snippets:snippet_list_by_tag" tag.slug %}" class="tag is-black">
+            {{ tag.name }}
+        </a>
+        {% if not forloop.last %}, {% endif %}
+        {% endfor %}
     </div>
     {% endwith %}
 {% endblock %}
