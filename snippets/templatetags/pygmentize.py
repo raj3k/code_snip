@@ -39,3 +39,11 @@ def pygmentize(value, args):
     parsed = highlight(value, lexer, formatter)
     return mark_safe(parsed)
 
+
+@register.filter
+def get_config(snippet):
+    language = snippet.language
+    style = snippet.style
+    linenos = snippet.linenos
+    return f'{language},{style},{linenos}'
+
