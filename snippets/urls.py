@@ -9,4 +9,5 @@ urlpatterns = [
     path('create/', views.snippet_create, name='create'),
     path('detail/<int:id>/<slug:slug>/', views.snippet_detail, name='detail'),
     path('like/', views.snippet_like, name='like'),
+    path('search/', views.snippet_search, name='search'),
 ]

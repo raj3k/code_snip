@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.postgres.search import TrigramSimilarity
 from taggit.models import Tag
-from .forms import SnippetCreateForm
+from .forms import SnippetCreateForm, SearchForm
 from .models import Snippet
 
 
@@ -74,3 +75,18 @@ def snippet_list(request, tag_slug=None):
     if snippets_only:
         return render(request, 'snippets/snippet/list_snippets.html', {'section': 'images', 'snippets': snippets, 'tag': tag})
     return render(request, 'snippets/snippet/list.html', {'section': 'snippets', 'snippets': snippets, 'tag': tag})
+
+
+@login_required
+def snippet_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Snippet.objects.annotate(
+                similarity=TrigramSimilarity('title', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
+    return render(request, 'snippets/snippet/search.html', {'form': form, 'query': query, 'results': results})

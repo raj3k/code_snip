@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Search{% endblock %}
+{% block content %}
+  {% if query %}
+    <h1 class="is-size-1">Snippets containing "{{ query }}"</h1>
+    <hr>
+    <h3>
+    {% with results.count as total_results %}
+        Found {{ total_results }} result{{ total_results|pluralize }}
+    {% endwith %}
+    </h3>
+    {% for snippet in results %}
+    <div class="columns">
+        <div class="column is-one-quarter">
+            <h4>
+                <a href="{{ snippet.get_absolute_url }}">
+                    {{ snippet.title }}
+                </a>
+            </h4>
+        </div>
+    </div>
+    {% empty %}
+        <p>There are no results for your query.</p>
+    {% endfor %}
+    <p><a href="{% url "snippets:search" %}" class="button">Search again</a></p>
+  {% else %}
+    <h1 class="is-size-1">Search for posts</h1>
+    <form method="get">
+        <div class="columns">
+			<div class="column is-one-quarter">
+				<div class="field">
+					<label class="label">Query:</label>
+                    <div class="control">
+                        {{ form.query|add_class:'input' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+      <input type="submit" value="Search" class="button">
+    </form>
+  {% endif %}
+{% endblock %}
