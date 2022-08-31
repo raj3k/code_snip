@@ -13,13 +13,10 @@
         </div>
         <div class="level-right">
             <div class="level-item has-text-centered">
-                <a href="#" data-id="{{ snippet.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="button is_normal" id="like">
-                {% if request.user not in users_like %}
-                    Like
-                {% else %}
-                    Unlike
-                {% endif %}
-                </a>
+                <div>
+                    <p class="heading">Total Views</p>
+                    <p class="title">{{ total_views }}</p>
+                </div>
             </div>
             
             <div class="level-item has-text-centered">
@@ -36,13 +33,20 @@
        </div>
     </div>
     <br>
+    <a href="#" data-id="{{ snippet.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="button is_normal" id="like">
+        {% if request.user not in users_like %}
+            Like
+        {% else %}
+            Unlike
+        {% endif %}
+    </a>
+    <hr>
     <h2>Related with:</h2>
     <div class="tags">
         {% for tag in snippet.tags.all %}
         <a href="{% url "snippets:snippet_list_by_tag" tag.slug %}" class="tag is-black">
             {{ tag.name }}
         </a>
-        {% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
     {% endwith %}
