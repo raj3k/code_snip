@@ -10,6 +10,13 @@ from .forms import SnippetCreateForm, SearchForm
 from .models import Snippet
 
 
+import redis
+from django.conf import settings
+# connect to redis
+r = redis.Redis(host=settings.REDIS_HOST,
+                port=settings.REDIS_PORT,
+                db=settings.REDIS_DB)
+
 @login_required
 def snippet_create(request):
     if request.method == 'POST':
@@ -30,10 +37,12 @@ def snippet_create(request):
 
 def snippet_detail(request, id, slug):
     snippet = get_object_or_404(Snippet, id=id, slug=slug)
+    total_views = r.incr(f'snippet:{snippet.id}:views')
     # string: language,style,linenos for custom template tag
     snippet_config = f"{snippet.language},{snippet.style},{snippet.linenos}"
     return render(request, 'snippets/snippet/detail.html', {'section': 'snippets', 'snippet': snippet,
-                                                            'snippet_config': snippet_config})
+                                                            'snippet_config': snippet_config,
+                                                            'total_views': total_views})
 
 
 @login_required
