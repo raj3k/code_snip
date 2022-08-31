@@ -27,12 +27,12 @@
        </div>
     </div>
     <br>
+    <p>Tags:</p>
     <div class="tags">
         {% for tag in snippet.tags.all %}
         <a href="{% url "snippets:snippet_list_by_tag" tag.slug %}" class="tag is-black">
             {{ tag.name }}
         </a>
-        {% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
     {% endwith %}
