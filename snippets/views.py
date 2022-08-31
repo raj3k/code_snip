@@ -54,7 +54,6 @@ def snippet_like(request):
     return JsonResponse({'status': 'error'})
 
 
-@login_required
 def snippet_list(request, tag_slug=None):
     snippets = Snippet.objects.all()
     tag = None
@@ -77,7 +76,6 @@ def snippet_list(request, tag_slug=None):
     return render(request, 'snippets/snippet/list.html', {'section': 'snippets', 'snippets': snippets, 'tag': tag})
 
 
-@login_required
 def snippet_search(request):
     form = SearchForm()
     query = None
