@@ -1,8 +1,49 @@
 {% extends 'base.html' %}
+{% load pygmentize %}
+{% block pygments_css %}<style>{% pygments_css %}</style>{% endblock %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
     <h1>Dashboard</h1>
     <p>
         Welcome to your dashboard. You can <a href="{% url "edit" %}">edit your profile</a> or <a href="{% url "password_change" %}">change your password</a>.
     </p>
+    <p>
+        <a href="{% url 'snippets:create' %}">Create new snippet</a>
+    <p>
+        <a href="{% url 'snippets:search' %}">Seach for snippets</a>
+    </p>
+    <hr>
+    {% if snippets %}
+        <h2>Snippets created by me</h2>
+        <div id="snippet-list">
+            {% include "snippets/snippet/list_snippets.html" %}
+        </div>
+    {% endif %}
+{% endblock %}
+{% block domready %}
+    var page = 1;
+    var emptyPage = false;
+    var blockRequest = false;
+    window.addEventListener('scroll', function(e) {
+        var margin = document.body.clientHeight - window.innerHeight - 200;
+        if(window.pageYOffset > margin && !emptyPage && !blockRequest) {
+            blockRequest = true;
+            page += 1;
+            fetch('?snippets_only=1&page=' + page)
+            .then(response => response.text())
+            .then(html => {
+                if (html === '') {
+                    emptyPage = true;
+                }
+                else {
+                    var snippetList = document.getElementById('snippet-list');
+                    snippetList.insertAdjacentHTML('beforeEnd', html);
+                    blockRequest = false;
+                }
+            })
+        }
+    });
+    // Launch scroll event
+    const scrollEvent = new Event('scroll');
+    window.dispatchEvent(scrollEvent);
 {% endblock %}
