@@ -1,12 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from snippets.models import Snippet
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from django.contrib import messages
 
 
 @login_required
 def dashboard(request):
-    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+    snippets = Snippet.objects.filter(user=request.user)
+    paginator = Paginator(snippets, 8)
+    page = request.GET.get('page')
+    snippets_only = request.GET.get('snippets_only')
+    try:
+        snippets = paginator.page(page)
+    except PageNotAnInteger:
+        snippets = paginator.page(1)
+    except EmptyPage:
+        if snippets_only:
+            return HttpResponse('')
+        snippets = paginator.page(paginator.num_pages)
+    if snippets_only:
+        return render(request, 'snippets/snippet/list_snippets.html', {'section': 'dashboard', 'snippets': snippets})
+    return render(request, 'account/dashboard.html', {'section': 'dashboard', 'snippets': snippets})
 
 
 def register(request):
