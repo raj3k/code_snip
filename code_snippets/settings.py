@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'social_django',
     'snippets.apps.SnippetsConfig',
     'taggit',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [
@@ -93,8 +94,6 @@ DATABASES = {
         'NAME': env('NAME'),
         'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
-        'HOST': env('HOST'),
-        'PORT': env('PORT'),
     }
 }
 
@@ -162,3 +161,8 @@ SOCIAL_AUTH_GITHUB_SECRET = env('SOCIAL_AUTH_GITHUB_SECRET')
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+
+REDIS_HOST = env('REDIS_HOST')
+REDIS_PORT = env('REDIS_PORT')
+REDIS_DB = env('REDIS_DB')
