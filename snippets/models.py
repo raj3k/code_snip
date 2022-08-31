@@ -12,8 +12,6 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
 class Snippet(models.Model):
-    #       id UUID
-    #   private/public
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='snippets_created',
@@ -42,7 +40,7 @@ class Snippet(models.Model):
         related_name='snippets_liked',
         blank=True
     )
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     class Meta:
         indexes = [
